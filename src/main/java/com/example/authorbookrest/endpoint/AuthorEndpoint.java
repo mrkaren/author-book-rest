@@ -4,12 +4,15 @@ import com.example.authorbookrest.dto.AuthorDto;
 import com.example.authorbookrest.dto.CreateAuthorRequestDto;
 import com.example.authorbookrest.dto.CreateAuthorResponseDto;
 import com.example.authorbookrest.entity.Author;
+import com.example.authorbookrest.entity.User;
 import com.example.authorbookrest.mapper.AuthorMapper;
 import com.example.authorbookrest.repository.AuthorRepository;
+import com.example.authorbookrest.security.CurrentUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,10 +36,14 @@ public class AuthorEndpoint {
     private final AuthorMapper authorMapper;
 
     @PostMapping()
-    public ResponseEntity<CreateAuthorResponseDto> create(@RequestBody CreateAuthorRequestDto requestDto) {
+    public ResponseEntity<CreateAuthorResponseDto> create(@RequestBody CreateAuthorRequestDto requestDto,
+                                                          @AuthenticationPrincipal CurrentUser currentUser) {
+        User user = currentUser.getUser();
+
         Optional<Author> byEmail = authorRepository.findByEmail(requestDto.getEmail());
         if (byEmail.isEmpty()) {
             Author author = authorMapper.map(requestDto);
+            author.setUser(user);
             authorRepository.save(author);
 
             return ResponseEntity.ok(authorMapper.map(author));
@@ -47,8 +54,9 @@ public class AuthorEndpoint {
     }
 
     @GetMapping()
-    public ResponseEntity<List<AuthorDto>> getAll() {
-        List<Author> all = authorRepository.findAll();
+    public ResponseEntity<List<AuthorDto>> getAll(@AuthenticationPrincipal CurrentUser currentUser) {
+        User user = currentUser.getUser();
+        List<Author> all = authorRepository.findAllByUser(user);
         if (all.size() == 0) {
             return ResponseEntity.notFound().build();
         }
@@ -58,6 +66,7 @@ public class AuthorEndpoint {
         }
         return ResponseEntity.ok(authorDtos);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Author> update(@PathVariable("id") int id, @RequestBody Author author) {

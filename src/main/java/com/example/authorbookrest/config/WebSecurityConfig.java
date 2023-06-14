@@ -3,7 +3,6 @@ package com.example.authorbookrest.config;
 import com.example.authorbookrest.filter.JWTAuthenticationTokenFilter;
 import com.example.authorbookrest.security.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -35,7 +34,7 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/user/auth").permitAll()
                 .requestMatchers(HttpMethod.POST,"/user/register").permitAll()
                 .requestMatchers(HttpMethod.GET,"/author/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/author/**").hasAnyAuthority("ADMIN")
+//                .requestMatchers(HttpMethod.POST, "/author/**").hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated();
 
         httpSecurity.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
