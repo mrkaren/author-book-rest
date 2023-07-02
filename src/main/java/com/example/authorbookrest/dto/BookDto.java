@@ -19,5 +19,6 @@ public class BookDto {
     private double priceAmd;
     private double priceUsd;
     private double priceRub;
+    private String picUrl;
     private AuthorDto authorDto;
 }

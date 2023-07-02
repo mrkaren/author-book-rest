@@ -29,6 +29,7 @@ public class Book {
     @Enumerated(value = EnumType.STRING)
     private Language language;
     private double priceAmd;
+    private String picName;
     @ManyToOne
     private Author author;
 

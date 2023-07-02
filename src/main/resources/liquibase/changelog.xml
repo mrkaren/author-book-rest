@@ -77,5 +77,13 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="addPicName" author="kgasparyan">
+        <addColumn tableName="book">
+            <column name="pic_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>
