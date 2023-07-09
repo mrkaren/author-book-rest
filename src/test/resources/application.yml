@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.H2Dialect
+  liquibase:
+    change-log: classpath:/liquibase/changelog.xml
+
+jwt:
+  secret: YXNkZmYkIyNzZFNEU0RBQVNERksjQEBkc2ZqZGZrZHNqQEAjZHNmZ2ZnZmdeXiYmWipeJSQkI2RzZHMkIyVzZDQ1MDk5KUkjJCg5V0ZTSUo=
+  expiration: 600000
+
+springdoc:
+  packages-to-scan: com.example.authorbookrest.endpoint
+
+countries:
+  api:
+    key: 273|HlHmeugKDPgtMprcd5WVP5BNAOCQFHKLMQNhYplP
+
+upload:
+  image:
+    path: /Users/karen/data/lessons/Java 2022-23/spring/author-book-rest/images/
+
+site:
+  url: http://localhost:8080

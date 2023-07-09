@@ -31,6 +31,13 @@ public class BookService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    public Book save(Book book) {
+        //
+        Book book1 = new Book();
+        book1.setDescription(book.getDescription());
+        return bookRepository.save(book1);
+    }
+
     public List<BookDto> search(int page, int size,
                                 BookSearchDto bookSearchDto) {
 //        Sort sort = Sort.by(Sort.Direction.DESC, "id");
@@ -93,7 +100,7 @@ public class BookService {
 
         PathBuilder<Object> orderByExpression = new PathBuilder<Object>(Book.class, bookSearchDto.getSortBy());
 
-        from.orderBy( new OrderSpecifier("asc".equalsIgnoreCase(bookSearchDto.getSortDirection()) ? Order.ASC
+        from.orderBy(new OrderSpecifier("asc".equalsIgnoreCase(bookSearchDto.getSortDirection()) ? Order.ASC
                 : Order.DESC, orderByExpression));
 
         return from.fetch();

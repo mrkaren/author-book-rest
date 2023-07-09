@@ -7,12 +7,13 @@ import com.example.authorbookrest.entity.Author;
 import com.example.authorbookrest.entity.User;
 import com.example.authorbookrest.mapper.AuthorMapper;
 import com.example.authorbookrest.repository.AuthorRepository;
+import com.example.authorbookrest.repository.UserRepository;
 import com.example.authorbookrest.security.CurrentUser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,13 +33,15 @@ import java.util.Optional;
 public class AuthorEndpoint {
 
     private final AuthorRepository authorRepository;
+    private final UserRepository userRepository;
 
     private final AuthorMapper authorMapper;
 
     @PostMapping()
     public ResponseEntity<CreateAuthorResponseDto> create(@RequestBody CreateAuthorRequestDto requestDto,
-                                                          @AuthenticationPrincipal CurrentUser currentUser) {
-        User user = currentUser.getUser();
+                                                          @AuthenticationPrincipal UserDetails currentUser) {
+        String username = currentUser.getUsername();
+        User user = userRepository.findByEmail(username).orElse(null);
 
         Optional<Author> byEmail = authorRepository.findByEmail(requestDto.getEmail());
         if (byEmail.isEmpty()) {
